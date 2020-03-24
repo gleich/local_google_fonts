@@ -1,18 +1,17 @@
 name: flutter_google_fonts
-description: A new Flutter package project.
-version: 0.0.1
-author: Matthew Gleich
-homepage: https://mattglei.ch
+description: Define google fonts in your pubspec.yml and automagically add them to your assets and pubspec.yml
+version: 1.0.0
+homepage: https://www.mattglei.ch
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
+  path: ^1.6.0
+  args: ^1.6.0
+  yaml: ^2.2.0
+  console: ^3.1.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-flutter:
+  pedantic: ^1.8.0
+  test: ^1.6.0
