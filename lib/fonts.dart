@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:console/console.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_google_fonts/models/font.dart';
+import 'package:http/http.dart';
 
 import 'package:flutter_google_fonts/status.dart';
 
 class Fonts {
-  static Future<bool> download(List<String> fonts) async {
+  static Future<StreamedResponse> download(List<String> fonts) async {
     final multipleFonts = fonts.length > 1;
     final fontForm = multipleFonts ? 'fonts' : 'font';
 
@@ -18,31 +19,31 @@ class Fonts {
     }
 
     final requestURL = Uri.parse(
-        'https://fonts.google.com/download?family=${multipleFonts ? cleanedFonts.join('%7C') : cleanedFonts[0]}');
+      'https://fonts.google.com/download?family=${multipleFonts ? cleanedFonts.join('%7C') : cleanedFonts[0]}',
+    );
 
     // Making request for zip
-    Console.write('⟱ Downloading $fontForm ⟱ ');
-    var timer = TimeDisplay();
-    timer.start();
-    final response = await http.StreamedRequest('GET', requestURL).send();
-    timer.stop();
-    print('');
+    Console.write('🔽 Downloading zip for $fontForm 🔽 ');
+    var downloadTimer = TimeDisplay();
+    downloadTimer.start();
+    final client = Client();
+    final request = Request('GET', requestURL);
+    final response = await client.send(request);
+
+    downloadTimer.stop();
     if (response.statusCode == 200) {
-      Status.success('Downloaded fonts');
-      final contents = ZipDecoder().decodeBytes(response.stream as List<int>);
-      for (final file in contents) {
-        final filename = file.name;
-        if (file.isFile) {
-          final data = file.content as List<int>;
-          File('out/ + filename')
-            ..createSync(recursive: true)
-            ..writeAsBytesSync(data);
-        } else {
-          Directory('out/' + filename).createSync(recursive: true);
-        }
-      }
+      Status.success('All fonts successfully downloaded!');
     } else {
       Status.error('Failed to download:\n\t$requestURL');
     }
+    return response;
+  }
+
+  static List<GoogleFont> extractDownload(
+    StreamedResponse response,
+    List<String> fonts,
+  ) {
+    // Checking execution path in root of flutter project
+    final cwd = Directory.current;
   }
 }
