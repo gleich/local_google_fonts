@@ -5,17 +5,17 @@ import 'package:flutter_google_fonts/status.dart';
 import 'package:yaml/yaml.dart';
 
 class Config {
-  static Map read() {
+  static Map read({fileName = 'pubspec.yaml'}) {
     Console.write('📄 Reading Config ');
     var readTimer = TimeDisplay();
     readTimer.start();
 
-    final file = File('pubspec.yaml');
+    final file = File(fileName);
     String yamlString;
     try {
       yamlString = file.readAsStringSync();
     } on FileSystemException {
-      Status.error('No ./pubspec.yaml found');
+      Status.error('No ./$fileName found');
     }
     final yamlMap = loadYaml(yamlString);
 
