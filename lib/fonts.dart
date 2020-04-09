@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:console/console.dart';
 import 'package:http/http.dart';
-import 'package:yaml/yaml.dart';
 
 import 'package:flutter_google_fonts/status.dart';
 
 class Fonts {
-  static Future<StreamedResponse> download(YamlList fonts) async {
+  static Future<StreamedResponse> download(List fonts) async {
     final multipleFonts = fonts.length > 1;
     final fontForm = multipleFonts ? 'fonts' : 'font';
 
@@ -29,7 +30,7 @@ class Fonts {
 
     downloadTimer.stop();
     if (response.statusCode == 200) {
-      Status.success('All fonts successfully downloaded!');
+      Status.success('Zip successfully downloaded!');
     } else {
       Status.error('Failed to download:\n\t$requestURL');
     }
