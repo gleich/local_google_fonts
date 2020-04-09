@@ -1,14 +1,11 @@
-import 'dart:io';
-
-import 'package:archive/archive_io.dart';
 import 'package:console/console.dart';
-import 'package:flutter_google_fonts/models/font.dart';
 import 'package:http/http.dart';
+import 'package:yaml/yaml.dart';
 
 import 'package:flutter_google_fonts/status.dart';
 
 class Fonts {
-  static Future<StreamedResponse> download(List<String> fonts) async {
+  static Future<StreamedResponse> download(YamlList fonts) async {
     final multipleFonts = fonts.length > 1;
     final fontForm = multipleFonts ? 'fonts' : 'font';
 
@@ -37,13 +34,5 @@ class Fonts {
       Status.error('Failed to download:\n\t$requestURL');
     }
     return response;
-  }
-
-  static List<GoogleFont> extractDownload(
-    StreamedResponse response,
-    List<String> fonts,
-  ) {
-    // Checking execution path in root of flutter project
-    final cwd = Directory.current;
   }
 }
