@@ -1,14 +1,17 @@
 import 'dart:io';
 
-import 'package:console/console.dart';
-import 'package:flutter_google_fonts/status.dart';
 import 'package:yaml/yaml.dart';
 
-class Config {
-  static Map read({fileName = 'pubspec.yaml'}) {
-    Console.write('📄 Reading Config ');
-    var readTimer = TimeDisplay();
-    readTimer.start();
+import 'package:flutter_google_fonts/status.dart';
+
+class Pubspec {
+  static Map read({
+    String fileName = 'pubspec.yaml',
+  }) {
+    Status.step(
+      'Reading Config in $fileName',
+      '📄',
+    );
 
     final file = File(fileName);
     String yamlString;
@@ -23,7 +26,6 @@ class Config {
       Status.error('No config found in pubspec');
     }
 
-    readTimer.stop();
     Status.success('Successfully read config');
     return yamlMap['google_fonts'] as Map;
   }
