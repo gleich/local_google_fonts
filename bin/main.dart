@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_google_fonts/pubspec.dart';
 import 'package:flutter_google_fonts/fonts.dart';
 import 'package:flutter_google_fonts/status.dart';
@@ -31,12 +33,18 @@ void main() async {
   final bytes = await Fonts.download(fontNames);
 
   // Validate that all fonts downloaded correctly
-  final fonts = Fonts.validation(bytes, fontNames);
+  final fonts = await Fonts.validation(bytes, fontNames);
 
-  print(fonts[0].name);
-  print(fonts[0].weights);
-  print(fonts[0].files);
-  print(fonts[0].url);
+  for (final font in fonts) {
+    print('=========');
+    print(font.name);
+    print(font.url);
+    print(font.files);
+    print(font.weights);
+    print('=========');
+  }
+
+  exit(0);
 
   // Extract the zip bytes
   // Fonts.extract(bytes, path);
