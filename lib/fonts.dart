@@ -123,4 +123,28 @@ class Fonts {
     }
     return weights;
   }
+
+  static void extract(
+    List<GoogleFont> googleFonts,
+    Archive zipContents,
+    String pathPrefix,
+  ) {
+    Console.init();
+    Console.write('🏗️  Extracting Zip  🏗️ ');
+    var extractTimer = TimeDisplay();
+    extractTimer.start();
+
+    // Move to assets folder
+    if (!FileUtils.chdir('${FileUtils.getcwd()}/$pathPrefix')) {
+      FileUtils.mkdir(
+        ['${FileUtils.getcwd()}/$pathPrefix'],
+        recursive: true,
+      );
+      FileUtils.chdir('${FileUtils.getcwd()}/$pathPrefix');
+    }
+    exit(0);
+
+    // Extract zip
+    for (final file in zipContents) {}
+  }
 }
