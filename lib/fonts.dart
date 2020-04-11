@@ -10,141 +10,81 @@ import 'package:flutter_google_fonts/status.dart';
 import 'package:flutter_google_fonts/models/font.dart';
 
 class Fonts {
-  static Future<Archive> download(List<String> fonts) async {
-    final multipleFonts = fonts.length > 1;
-    final fontForm = multipleFonts ? 'Fonts' : 'Font';
-
-    Status.step('Downloading Zip for $fontForm', '🔽');
-
-    // Cleaning up spaces from fonts
-    var cleanedFonts = [];
-    for (final font in fonts) {
-      cleanedFonts.add(font.replaceAll(' ', '+'));
-    }
-
-    final requestURL = Uri.parse(
-      'https://fonts.google.com/download?family=${multipleFonts ? cleanedFonts.join('%7C') : cleanedFonts[0]}',
-    );
-
-    // Making request for zip
-    final client = http.Client();
-    final request = http.Request('GET', requestURL);
-    final response = await client.send(request);
-
-    if (response.statusCode == 200) {
-      Status.success(
-        'Zip successfully downloaded',
-      );
-    } else {
-      Status.error(
-        'Failed to download:\n\t$requestURL',
-      );
-    }
-    return ZipDecoder().decodeBytes(await response.stream.toBytes());
-  }
-
-  static Future<List<GoogleFont>> validation(
-    Archive zipContent,
-    List<String> fontNames,
+  static Future<Map<String, Map<String, String>>> download(
+    List fonts,
+    bool verbose,
   ) async {
-    Status.step('Checking Downloaded Zip', '📦');
+    Status.step('Downloading ${fonts.length > 1 ? 'Fonts' : 'Font'}', '🔽');
 
-    final fileNames = <String>[];
-    zipContent.forEach((file) {
-      if (file.name.endsWith('.ttf')) {
-        fileNames.add(file.name);
-      }
-    });
+    final ttfFiles = <String, Map<String, String>>{};
 
-    final googleFonts = <GoogleFont>[];
+    for (final font in fonts) {
+      const baseURL = 'https://fonts.googleapis.com/css?family=';
 
-    // Checking that fonts downloaded correctly
-    for (final fontName in fontNames) {
-      var found = false;
-      final files = <String>[];
-      final weights = await Fonts.fontWeights(fontName);
-      for (final fileName in fileNames) {
-        final validFile = weights.containsKey(
-          fontNames.length > 1 ? fileName.split('/')[1] : fileName,
+      if (font is String) {
+        // All weights
+        Status.step('Downloading font: $font', '🔽', indentation: 1);
+        final fixedFontName = font.replaceAll(' ', '+');
+        final fileFontName = font.replaceAll(' ', '-');
+        final cssSheet = await http.get(
+          '$baseURL$fixedFontName:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
         );
-        if (validFile) {
-          found = true;
-          files.add(fileName);
-        }
-      }
-      if (found) {
-        Status.success('$fontName successfully downloaded');
-        googleFonts.add(
-          GoogleFont(
-            fontName,
-            'https://fonts.google.com/specimen/$fontName?selection.family=$fontName',
-            files,
-            weights,
-          ),
-        );
-      } else {
-        Status.error('$fontName didn\'t download');
-      }
-    }
-    return googleFonts;
-  }
-
-  static Future<Map<String, String>> fontWeights(String fontName) async {
-    final weights = <String, String>{};
-
-    // Making request for css
-    final requestUrl =
-        'https://fonts.googleapis.com/css?family=$fontName:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i';
-    final response = await http.get(requestUrl);
-    if (response.statusCode == 200) {
-      final lines = response.body.split('\n');
-      for (var i = 0; i < lines.length; i++) {
-        if (lines[i].contains('font-weight:')) {
-          var weight = lines[i]
-              .trim()
-              .replaceAll('font-weight:', '')
-              .trim()
-              .replaceAll(';', '')
-              .toString();
-          if (lines[i - 1].contains('italic')) {
-            weight = '${weight}i';
+        if (cssSheet.statusCode == 200) {
+          // Parsing css for weight and ttf url
+          final lines = cssSheet.body.split('\n');
+          for (var i = 0; i != lines.length; i++) {
+            if (lines[i].toLowerCase().contains('font-weight')) {
+              final italicized = lines[i - 1].contains('italic') &&
+                  lines[i - 1].contains('font-style');
+              var weight = lines[i]
+                  .split('font-weight')
+                  .last
+                  .replaceAll(':', '')
+                  .replaceAll(';', '')
+                  .trim();
+              italicized ? weight = '${weight}i' : weight = weight;
+              final ttfURL = (lines[i + 1]
+                  .split(' ')
+                  .firstWhere(
+                    (section) =>
+                        section.contains('url(https://fonts.gstatic.com'),
+                  )
+                  .replaceAll('url(', '')
+                  .replaceAll(')', ''));
+              final fontType = ttfURL.split('.').last;
+              if (fontType == 'ttf') {
+                final ttfFile = await http.get(ttfURL);
+                if (ttfFile.statusCode == 200) {
+                  if (!ttfFiles.containsKey(font)) {
+                    ttfFiles[fileFontName] = {};
+                  }
+                  ttfFiles[fileFontName][weight] = ttfFile.body;
+                }
+                if (verbose) {
+                  Status.success('Downloaded $fileFontName-$weight.ttf',
+                      indentation: 2);
+                }
+              } else {
+                Status.error(
+                  'Font $font is of type: $fontType. Flutter only works with ttf fonts',
+                );
+              }
+            }
           }
-          final file = lines[i + 1]
-                  .split(',')[1]
-                  .trim()
-                  .replaceAll('local(\'', '')
-                  .replaceAll('\')', '') +
-              '.ttf';
-          weights[file] = weight;
+        } else {
+          Status.error('Failed to get font: $font');
         }
+        Status.success('Downloaded font: $font');
+      } else if (font is Map) {
+        // Defined weights
+      } else {
+        Status.error('$font in unknown format');
       }
-    } else {
-      Status.error('Failed to get css for $fontName');
     }
-    return weights;
+    return ttfFiles;
   }
+}
 
-  static void extract(
-    List<GoogleFont> googleFonts,
-    Archive zipContents,
-    String pathPrefix,
-  ) {
-    Console.init();
-    Console.write('🏗️  Extracting Zip  🏗️ ');
-    var extractTimer = TimeDisplay();
-    extractTimer.start();
-
-    // Move to assets folder
-    if (!FileUtils.chdir('${FileUtils.getcwd()}/$pathPrefix')) {
-      FileUtils.mkdir(
-        ['${FileUtils.getcwd()}/$pathPrefix'],
-        recursive: true,
-      );
-      FileUtils.chdir('${FileUtils.getcwd()}/$pathPrefix');
-    }
-    exit(0);
-
-    // Extract zip
-    for (final file in zipContents) {}
-  }
+class _Util {
+  static parseCSSLines(List<String> selectLines) {}
 }
