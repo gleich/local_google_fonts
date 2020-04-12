@@ -1,6 +1,6 @@
 name: local_google_fonts
 description: Define google fonts in your pubspec.yml and automagically add them to your assets and pubspec.yml
-version: 1.0.0
+version: 1.0.1
 homepage: https://www.mattglei.ch
 maintainer: Matthew Gleich (Matt-Gleich)
 
