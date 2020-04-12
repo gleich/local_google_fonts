@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:process_run/process_run.dart';
+import 'package:process_run/which.dart';
 import 'package:yaml/yaml.dart';
 import 'package:yamlicious/yamlicious.dart';
 
-import 'package:flutter_google_fonts/status.dart';
+import 'package:local_google_fonts/status.dart';
 
 class Pubspec {
   static Map read() {
@@ -58,7 +60,7 @@ class Pubspec {
       for (final weight in ttfFiles[font].keys) {
         final asset = {};
         asset['asset'] = '$pathPrefix/$font/$font-$weight.ttf';
-        asset['weight'] = weight.replaceAll('i', '');
+        asset['weight'] = int.parse(weight.replaceAll('i', ''));
         if (weight.contains('i')) {
           asset['style'] = 'italic';
         }
@@ -68,9 +70,36 @@ class Pubspec {
     }
     yamlMap['flutter']['fonts'] = fonts;
 
-    File('pubspec.yaml').deleteSync();
-    File('pubspec.yaml').createSync();
     File('pubspec.yaml').writeAsStringSync(toYamlString(yamlMap));
+
     Status.success('Wrote config to pubspec.yaml');
+  }
+
+  static void format() async {
+    while (true) {
+      if (whichSync('prettier') is String) {
+        Status.step('🛠️  Format pubspec.yaml with prettier');
+        await run('prettier', ['--write', 'pubspec.yaml']);
+        Status.success('Formatted pubspec.yaml');
+        break;
+      } else if (whichSync('npm') is String) {
+        Status.step('🚀  Downloading prettier formatter');
+        await run('npm', ['install', '--global', 'prettier']);
+        Status.success('Install prettier formatter');
+        continue;
+      } else if (whichSync('yarn') is String) {
+        Status.step('🚀  Downloading prettier formatter');
+        await run('yarn', ['global', 'add', 'prettier']);
+        Status.success('Install prettier formatter');
+        continue;
+      }
+      break;
+    }
+  }
+
+  static void flutterPubGet() async {
+    Status.step('🏃🏼‍♂️ Running: flutter pub get');
+    await run('flutter', ['pub', 'get']);
+    Status.success('Ran flutter pub get');
   }
 }

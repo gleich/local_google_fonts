@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 
-import 'package:flutter_google_fonts/status.dart';
+import 'package:local_google_fonts/status.dart';
 
 class GoogleFonts {
   static Future<Map<String, Map<String, String>>> download(

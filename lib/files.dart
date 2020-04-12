@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter_google_fonts/status.dart';
+import 'package:local_google_fonts/status.dart';
 
 class Files {
   static String moveToWriteLocation(String pathPrefix) {

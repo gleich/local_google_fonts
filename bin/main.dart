@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter_google_fonts/files.dart';
-import 'package:flutter_google_fonts/pubspec.dart';
-import 'package:flutter_google_fonts/fonts.dart';
-import 'package:flutter_google_fonts/status.dart';
+import 'package:local_google_fonts/files.dart';
+import 'package:local_google_fonts/pubspec.dart';
+import 'package:local_google_fonts/fonts.dart';
+import 'package:local_google_fonts/status.dart';
 
 void main() async {
   // Reading config and setting vars for rest of program
@@ -19,6 +19,9 @@ void main() async {
   final pathPrefix =
       config.containsKey('path') ? config['path'] : 'assets/fonts/googleFonts';
   final documentation = config.containsKey('docs') ? config['docs'] : true;
+  final format = config.containsKey('format') ? config['format'] : true;
+  final flutterPubGet =
+      config.containsKey('flutterPubGet') ? config['flutterPubGet'] : true;
 
   // Getting ttf files
   final ttfFiles = await GoogleFonts.download(config['fonts']);
@@ -30,4 +33,12 @@ void main() async {
   // Writing to pubspec.yaml
   Directory.current = cwd;
   Pubspec.write(ttfFiles, pathPrefix);
+  if (format) {
+    await Pubspec.format();
+  }
+  if (flutterPubGet) {
+    await Pubspec.flutterPubGet();
+  }
+
+  print('\n😄 All operations were successful!');
 }
