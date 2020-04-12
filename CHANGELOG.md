@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Fix examples in documentation
+
 ## 1.0.3
 
 - Fix writing to ttf files
