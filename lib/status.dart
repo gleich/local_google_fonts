@@ -14,8 +14,10 @@ class Status {
     );
   }
 
-  static void error(String message,
-      {int indentation = 1, bool linker = false}) {
+  static void error(
+    String message, {
+    int indentation = 1,
+  }) {
     var pen = TextPen();
     pen.red();
     pen(

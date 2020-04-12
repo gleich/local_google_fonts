@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:process_run/process_run.dart';
 import 'package:process_run/which.dart';
@@ -32,7 +33,7 @@ class Pubspec {
   }
 
   static void write(
-    Map<String, Map<String, String>> ttfFiles,
+    Map<String, Map<String, Uint8List>> ttfFiles,
     String pathPrefix,
   ) {
     Status.step('✍️  Writing to pubspec.yaml');

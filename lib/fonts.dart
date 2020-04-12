@@ -1,15 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:http/http.dart' as http;
 
 import 'package:local_google_fonts/status.dart';
 
 class GoogleFonts {
-  static Future<Map<String, Map<String, String>>> download(
+  static Future<Map<String, Map<String, Uint8List>>> download(
     List fonts,
   ) async {
     Status.step('🔽 Downloading ${fonts.length > 1 ? 'Fonts' : 'Font'}');
 
     // {fileFontName: {fontWeight: ttfBinary}}
-    final ttfFiles = <String, Map<String, String>>{};
+    final ttfFiles = <String, Map<String, Uint8List>>{};
 
     for (final font in fonts) {
       const baseURL = 'https://fonts.googleapis.com/css?family=';
@@ -73,13 +75,13 @@ class GoogleFonts {
     return ttfFiles;
   }
 
-  static Future<Map<String, String>> _downloadFromCSS(
+  static Future<Map<String, Uint8List>> _downloadFromCSS(
     String cssBody,
     String fontName,
   ) async {
     // Parsing css for weight and ttf url
 
-    final ttfFilesVariations = <String, String>{};
+    final ttfFilesVariations = <String, Uint8List>{};
     final lines = cssBody.split('\n');
     final fileFontName = fontName.replaceAll(' ', '-');
 
@@ -105,7 +107,7 @@ class GoogleFonts {
         if (fontType == 'ttf') {
           final ttfFile = await http.get(ttfURL);
           if (ttfFile.statusCode == 200) {
-            ttfFilesVariations[weight] = ttfFile.body;
+            ttfFilesVariations[weight] = ttfFile.bodyBytes;
           }
           Status.success(
             'Downloaded $fileFontName-$weight.ttf',

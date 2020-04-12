@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:local_google_fonts/status.dart';
 
@@ -12,14 +13,14 @@ class Files {
   }
 
   static void writeFiles(
-      Map<String, Map<String, String>> ttfFiles, bool documentation) {
+      Map<String, Map<String, Uint8List>> ttfFiles, bool documentation) {
     Status.step('✍️  Writing to files');
     for (final fileFontName in ttfFiles.keys) {
       // Writing ttf files
       for (final fontWeight in ttfFiles[fileFontName].keys) {
         final file = File('$fileFontName/$fileFontName-$fontWeight.ttf');
         file.createSync(recursive: true);
-        file.writeAsStringSync(ttfFiles[fileFontName][fontWeight]);
+        file.writeAsBytes(ttfFiles[fileFontName][fontWeight]);
       }
       // Writing to README.md
       if (documentation) {
