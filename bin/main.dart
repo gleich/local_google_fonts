@@ -8,6 +8,7 @@ import 'package:flutter_google_fonts/status.dart';
 void main() async {
   // Reading config and setting vars for rest of program
   final config = Pubspec.read();
+  final cwd = Directory.current.path;
 
   // Validating Config
   if (config['fonts'].isEmpty) {
@@ -25,4 +26,8 @@ void main() async {
   // Writing to actual ttf files
   Files.moveToWriteLocation(pathPrefix);
   Files.writeFiles(ttfFiles, documentation);
+
+  // Writing to pubspec.yaml
+  Directory.current = cwd;
+  Pubspec.write(ttfFiles, pathPrefix);
 }
