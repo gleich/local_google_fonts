@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_google_fonts/files.dart';
 import 'package:flutter_google_fonts/pubspec.dart';
 import 'package:flutter_google_fonts/fonts.dart';
 import 'package:flutter_google_fonts/status.dart';
@@ -14,11 +15,15 @@ void main() async {
   }
 
   // Setting defaults
-  final path = config.containsKey('pathPrefix')
+  final pathPrefix = config.containsKey('pathPrefix')
       ? config['path']
       : 'assets/fonts/googleFonts';
   final documentation = config.containsKey('docs') ? config['docs'] : true;
 
   // Getting ttf files
   final ttfFiles = await GoogleFonts.download(config['fonts']);
+
+  // Writing to actual ttf files
+  Files.moveToWriteLocation(pathPrefix);
+  Files.writeTffFiles(ttfFiles);
 }
