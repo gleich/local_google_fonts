@@ -1,18 +1,14 @@
 import 'dart:io';
 
-import 'package:file_utils/file_utils.dart';
 import 'package:flutter_google_fonts/status.dart';
 
 class Files {
   static String moveToWriteLocation(String pathPrefix) {
-    final location = '${FileUtils.getcwd()}/$pathPrefix';
+    final location = '${Directory.current.path}/$pathPrefix';
     Directory(location).deleteSync(recursive: true);
-    FileUtils.mkdir(
-      [location],
-      recursive: true,
-    );
-    FileUtils.chdir(location);
-    return FileUtils.getcwd();
+    Directory(location).createSync(recursive: true);
+    Directory.current = location;
+    return Directory.current.path;
   }
 
   static void writeFiles(

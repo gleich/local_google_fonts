@@ -15,15 +15,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.39.4"
-  archive:
-    dependency: "direct main"
-    description:
-      name: archive
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.13"
   args:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: args
       url: "https://pub.dartlang.org"
@@ -92,13 +85,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
-  file_utils:
-    dependency: "direct main"
-    description:
-      name: file_utils
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   glob:
     dependency: transitive
     description:
@@ -106,13 +92,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  globbing:
-    dependency: transitive
-    description:
-      name: globbing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   html:
     dependency: transitive
     description:

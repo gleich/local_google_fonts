@@ -9,12 +9,9 @@ environment:
 
 dependencies:
   path: ^1.6.0
-  args: ^1.6.0
   yaml: ^2.2.0
   console: ^3.1.0
   http: ^0.12.0+4
-  archive: ^2.0.13
-  file_utils: ^0.1.4
 
 dev_dependencies:
   pedantic: ^1.8.0
