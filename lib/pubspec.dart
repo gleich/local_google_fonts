@@ -9,8 +9,7 @@ class Pubspec {
     String fileName = 'pubspec.yaml',
   }) {
     Status.step(
-      'Reading Config in $fileName',
-      '📄',
+      '📄 Reading Config in $fileName',
     );
 
     final file = File(fileName);

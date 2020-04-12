@@ -4,17 +4,18 @@ import 'package:console/console.dart';
 
 class Status {
   static void step(
-    String name,
-    String emoji, {
+    String name, {
     int indentation = 0,
   }) {
-    print('${_Util.generateIndentation(indentation)}$emoji $name $emoji ');
+    print(
+      '${_Util.generateIndentation(
+        indentation,
+      )}$name',
+    );
   }
 
-  static void error(
-    String message, {
-    int indentation = 1,
-  }) {
+  static void error(String message,
+      {int indentation = 1, bool linker = false}) {
     var pen = TextPen();
     pen.red();
     pen(
@@ -27,7 +28,6 @@ class Status {
   static void success(
     String message, {
     int indentation = 1,
-    bool separator = true,
   }) {
     var pen = TextPen();
     pen.green();
@@ -41,8 +41,8 @@ class Status {
 class _Util {
   static String generateIndentation(int indentation) {
     final tabs = [];
-    for (var i = 0; i != indentation; i++) {
-      tabs.add(i == indentation - 1 ? '∟ㅡㅡㅡ' : '\t');
+    for (var i = 0; i != indentation + 1; i++) {
+      tabs.add(i == indentation ? '┗╼╾' : '   ');
     }
     return tabs.join();
   }

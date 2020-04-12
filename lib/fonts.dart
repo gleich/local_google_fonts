@@ -1,90 +1,124 @@
-import 'dart:io';
-import 'dart:convert';
-
-import 'package:archive/archive.dart';
-import 'package:console/console.dart';
-import 'package:file_utils/file_utils.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_google_fonts/status.dart';
-import 'package:flutter_google_fonts/models/font.dart';
 
-class Fonts {
+class GoogleFonts {
   static Future<Map<String, Map<String, String>>> download(
     List fonts,
-    bool verbose,
   ) async {
-    Status.step('Downloading ${fonts.length > 1 ? 'Fonts' : 'Font'}', '🔽');
+    Status.step('🔽 Downloading ${fonts.length > 1 ? 'Fonts' : 'Font'}');
 
+    // {fileFontName: {fontWeight: ttfBinary}}
     final ttfFiles = <String, Map<String, String>>{};
 
     for (final font in fonts) {
       const baseURL = 'https://fonts.googleapis.com/css?family=';
+      String fileFontName;
+      String fontName;
 
       if (font is String) {
         // All weights
-        Status.step('Downloading font: $font', '🔽', indentation: 1);
+        fontName = font;
+        Status.step('🔽 Downloading font: $fontName', indentation: 1);
+
         final fixedFontName = font.replaceAll(' ', '+');
-        final fileFontName = font.replaceAll(' ', '-');
+        fileFontName = font.replaceAll(' ', '-');
+        // Getting css sheet for all available weights
         final cssSheet = await http.get(
           '$baseURL$fixedFontName:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
         );
         if (cssSheet.statusCode == 200) {
-          // Parsing css for weight and ttf url
-          final lines = cssSheet.body.split('\n');
-          for (var i = 0; i != lines.length; i++) {
-            if (lines[i].toLowerCase().contains('font-weight')) {
-              final italicized = lines[i - 1].contains('italic') &&
-                  lines[i - 1].contains('font-style');
-              var weight = lines[i]
-                  .split('font-weight')
-                  .last
-                  .replaceAll(':', '')
-                  .replaceAll(';', '')
-                  .trim();
-              italicized ? weight = '${weight}i' : weight = weight;
-              final ttfURL = (lines[i + 1]
-                  .split(' ')
-                  .firstWhere(
-                    (section) =>
-                        section.contains('url(https://fonts.gstatic.com'),
-                  )
-                  .replaceAll('url(', '')
-                  .replaceAll(')', ''));
-              final fontType = ttfURL.split('.').last;
-              if (fontType == 'ttf') {
-                final ttfFile = await http.get(ttfURL);
-                if (ttfFile.statusCode == 200) {
-                  if (!ttfFiles.containsKey(font)) {
-                    ttfFiles[fileFontName] = {};
-                  }
-                  ttfFiles[fileFontName][weight] = ttfFile.body;
-                }
-                if (verbose) {
-                  Status.success('Downloaded $fileFontName-$weight.ttf',
-                      indentation: 2);
-                }
-              } else {
-                Status.error(
-                  'Font $font is of type: $fontType. Flutter only works with ttf fonts',
-                );
-              }
-            }
-          }
+          ttfFiles[fileFontName] = await _downloadFromCSS(cssSheet.body, font);
         } else {
-          Status.error('Failed to get font: $font');
+          Status.error(
+            'Failed to get font: $fontName',
+            indentation: 2,
+          );
         }
-        Status.success('Downloaded font: $font');
       } else if (font is Map) {
-        // Defined weights
+        fontName = font.keys.first;
+        Status.step('🔽 Downloading font: $fontName', indentation: 1);
+
+        final fixedFontName = fontName.replaceAll(' ', '+');
+        fileFontName = fontName.replaceAll(' ', '-');
+        /*
+        Getting css sheet for each weight individually
+        This is done so the user knows if the font failed to download and doesn't exist.
+        */
+        for (final fontWeight in font.values.first) {
+          final cssSheet = await http.get(
+            '$baseURL$fixedFontName:$fontWeight',
+          );
+          if (cssSheet.statusCode == 200) {
+            final ttfFile = await _downloadFromCSS(cssSheet.body, fontName);
+            if (!ttfFiles.containsKey(fileFontName)) {
+              ttfFiles[fileFontName] = {};
+            }
+            ttfFiles[fileFontName][ttfFile.keys.first] = ttfFile.values.first;
+          } else {
+            Status.error(
+              'Failed to get weight $fontWeight for $fontName',
+              indentation: 2,
+            );
+          }
+        }
       } else {
         Status.error('$font in unknown format');
       }
+      Status.success(
+        'Downloaded ${ttfFiles[fileFontName].keys.length} variations of $fontName',
+        indentation: 3,
+      );
     }
     return ttfFiles;
   }
-}
 
-class _Util {
-  static parseCSSLines(List<String> selectLines) {}
+  static Future<Map<String, String>> _downloadFromCSS(
+    String cssBody,
+    String fontName,
+  ) async {
+    // Parsing css for weight and ttf url
+
+    final ttfFilesVariations = <String, String>{};
+    final lines = cssBody.split('\n');
+    final fileFontName = fontName.replaceAll(' ', '-');
+
+    for (var i = 0; i != lines.length; i++) {
+      if (lines[i].toLowerCase().contains('font-weight')) {
+        final italicized = lines[i - 1].contains('italic') &&
+            lines[i - 1].contains('font-style');
+        var weight = lines[i]
+            .split('font-weight')
+            .last
+            .replaceAll(':', '')
+            .replaceAll(';', '')
+            .trim();
+        italicized ? weight = '${weight}i' : weight = weight;
+        final ttfURL = lines[i + 1]
+            .split(' ')
+            .firstWhere(
+              (section) => section.contains('url(https://fonts.gstatic.com'),
+            )
+            .replaceAll('url(', '')
+            .replaceAll(')', '');
+        final fontType = ttfURL.split('.').last;
+        if (fontType == 'ttf') {
+          final ttfFile = await http.get(ttfURL);
+          if (ttfFile.statusCode == 200) {
+            ttfFilesVariations[weight] = ttfFile.body;
+          }
+          Status.success(
+            'Downloaded $fileFontName-$weight.ttf',
+            indentation: 2,
+          );
+        } else {
+          Status.error(
+            'Font $fontName is of type: $fontType. Flutter only works with ttf fonts',
+            indentation: 2,
+          );
+        }
+      }
+    }
+    return ttfFilesVariations;
+  }
 }

@@ -13,16 +13,6 @@ void main() async {
     Status.error('No fonts listed in config');
   }
 
-  // Getting name of all fonts
-  final fontNames = <String>[];
-  for (final font in config['fonts']) {
-    if (font is String) {
-      fontNames.add(font);
-    } else {
-      fontNames.add(font.keys.first);
-    }
-  }
-
   // Setting defaults
   final path = config.containsKey('pathPrefix')
       ? config['path']
@@ -30,5 +20,5 @@ void main() async {
   final documentation = config.containsKey('docs') ? config['docs'] : true;
 
   // Getting ttf files
-  await Fonts.download(fontNames, true);
+  final ttfFiles = await GoogleFonts.download(config['fonts']);
 }
