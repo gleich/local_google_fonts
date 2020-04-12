@@ -15,9 +15,8 @@ void main() async {
   }
 
   // Setting defaults
-  final pathPrefix = config.containsKey('pathPrefix')
-      ? config['path']
-      : 'assets/fonts/googleFonts';
+  final pathPrefix =
+      config.containsKey('path') ? config['path'] : 'assets/fonts/googleFonts';
   final documentation = config.containsKey('docs') ? config['docs'] : true;
 
   // Getting ttf files
@@ -25,5 +24,5 @@ void main() async {
 
   // Writing to actual ttf files
   Files.moveToWriteLocation(pathPrefix);
-  Files.writeTffFiles(ttfFiles);
+  Files.writeFiles(ttfFiles, documentation);
 }
