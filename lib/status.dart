@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:console/console.dart';
 
 class Status {
+  /// Output and formatting for step
   static void step(
     String name, {
     int indentation = 0,
@@ -14,6 +15,7 @@ class Status {
     );
   }
 
+  /// Output and formatting for error
   static void error(
     String message, {
     int indentation = 1,
@@ -27,6 +29,7 @@ class Status {
     exit(1);
   }
 
+  /// Output and formatting for success
   static void success(
     String message, {
     int indentation = 1,

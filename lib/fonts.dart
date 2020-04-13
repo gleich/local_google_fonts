@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:local_google_fonts/status.dart';
 
 class GoogleFonts {
+  /// Download each ttf file
   static Future<Map<String, Map<String, Uint8List>>> download(
     List fonts,
   ) async {
@@ -75,6 +76,7 @@ class GoogleFonts {
     return ttfFiles;
   }
 
+  /// Actual download of ttf file from given css sheet for font
   static Future<Map<String, Uint8List>> _downloadFromCSS(
     String cssBody,
     String fontName,

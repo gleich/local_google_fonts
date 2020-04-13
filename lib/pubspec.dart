@@ -10,6 +10,7 @@ import 'package:yamlicious/yamlicious.dart';
 import 'package:local_google_fonts/status.dart';
 
 class Pubspec {
+  /// Read from pubspec.yaml
   static Map read() {
     Status.step(
       '📄 Reading Config in pubspec.yaml',
@@ -32,6 +33,7 @@ class Pubspec {
     return yamlMap['google_fonts'] as Map;
   }
 
+  /// Write fonts to pubspec.yaml
   static void write(
     Map<String, Map<String, Uint8List>> ttfFiles,
     String pathPrefix,
@@ -76,6 +78,7 @@ class Pubspec {
     Status.success('Wrote config to pubspec.yaml');
   }
 
+  /// Format the pubspec.yaml file with prettier
   static void format() async {
     while (true) {
       if (whichSync('prettier') is String) {
@@ -98,6 +101,7 @@ class Pubspec {
     }
   }
 
+  /// Run flutter pub get
   static void flutterPubGet() async {
     Status.step('🏃🏼‍♂️ Running: flutter pub get');
     await run('flutter', ['pub', 'get']);

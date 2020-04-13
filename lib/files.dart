@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:local_google_fonts/status.dart';
 
 class Files {
+  /// Move to the path where the fonts are gonna go
   static String moveToWriteLocation(String pathPrefix) {
     final location = '${Directory.current.path}/$pathPrefix';
     if (Directory(location).existsSync()) {
@@ -14,6 +15,7 @@ class Files {
     return Directory.current.path;
   }
 
+  /// Write binary to ttf files
   static void writeFiles(
       Map<String, Map<String, Uint8List>> ttfFiles, bool documentation) {
     Status.step('✍️  Writing to files');
