@@ -1,3 +1,8 @@
+## 1.0.6
+
+- Add dartdoc to every method
+- Change homepage to github repo
+
 ## 1.0.5
 
 - Fix removal of directory if it doesn't exist
