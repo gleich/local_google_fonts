@@ -1,3 +1,7 @@
+## 1.0.7
+
+- Add README.md example
+
 ## 1.0.6
 
 - Add dartdoc to every method

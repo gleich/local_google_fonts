@@ -4,7 +4,7 @@ Right now, adding google fonts to your flutter project can take a significant am
 
 ## 🚀 Installing
 
-Simply add `local_google_fonts: ^1.0.6` to your `dev-dependencies`
+Simply add `local_google_fonts: ^1.0.7` to your `dev-dependencies`
 
 ## 🧾 Configuration
 
