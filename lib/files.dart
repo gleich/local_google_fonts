@@ -6,7 +6,9 @@ import 'package:local_google_fonts/status.dart';
 class Files {
   static String moveToWriteLocation(String pathPrefix) {
     final location = '${Directory.current.path}/$pathPrefix';
-    Directory(location).deleteSync(recursive: true);
+    if (Directory(location).existsSync()) {
+      Directory(location).deleteSync(recursive: true);
+    }
     Directory(location).createSync(recursive: true);
     Directory.current = location;
     return Directory.current.path;

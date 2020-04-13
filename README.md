@@ -4,7 +4,7 @@ Right now, adding google fonts to your flutter project can take a significant am
 
 ## 🚀 Installing
 
-Simply add `local_google_fonts: ^1.0.4` to your `dev-dependencies`
+Simply add `local_google_fonts: ^1.0.5` to your `dev-dependencies`
 
 ## 🧾 Configuration
 
@@ -24,11 +24,11 @@ You can also define the weights if you don't want all available versions of a fo
 ```yaml
 google_fonts:
   fonts:
-    - Roboto
-      - 300
-    - Open Sans
-      - "400i"
-      - 800
+    - Roboto:
+        - 400
+    - Open Sans:
+        - "400i"
+        - 800
 ```
 
 ### Defaults

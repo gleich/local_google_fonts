@@ -1,3 +1,9 @@
+## 1.0.5
+
+- Fix removal of directory if it doesn't exist
+- Add example Application
+- Fix example in `README.md`
+
 ## 1.0.4
 
 - Fix examples in documentation
