@@ -4,7 +4,7 @@ Right now, adding google fonts to your flutter project can take a significant am
 
 ## 🚀 Installing
 
-Simply add `local_google_fonts: ^1.0.7` to your `dev-dependencies`
+Simply add `local_google_fonts: ^1.0.8` to your `dev-dependencies`
 
 ## 🧾 Configuration
 
@@ -33,12 +33,12 @@ google_fonts:
 
 ### Defaults
 
-| Name          | Default Value              | Description                                                                                                                                                                                                                                                                     | Turn Off                                                               |
-| ------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| format        | true                       | Formats the `pubspec.yaml` file after writing to it because the write makes it look kinda weird. This does require the [prettier cli](https://prettier.io/). If its not currently installed and you have either npm or yarn on your machine it will be install it automatically | Add `format: false` under `google_fonts` in your `pubspec.yaml`        |
-| path          | "assets/fonts/googleFonts" | Where the fonts should be downloaded too. **Fonts not used by this program should not be in this folder**.                                                                                                                                                                      | Add `path:  ""` under `google_fonts` in your `pubspec.yaml`            |
-| flutterPubGet | true                       | If `flutter pub get` should be ran automatically once the fonts have been added                                                                                                                                                                                                 | Add `flutterPubGet: false` under `google_fonts` in your `pubspec.yaml` |
-| docs          | true                       | Adds a `README.md` in the folder for each font with some information about the font.                                                                                                                                                                                            | Add `docs: false` under `google_fonts` in your `pubspec.yaml`          |
+| Name          | Default Value              | Description                                                                                                                                                                                                                                                                      | Turn Off                                                               |
+| ------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| format        | true                       | Formats the `pubspec.yaml` file after writing to it because the write makes it look kinda weird. This does require the [prettier cli](https://prettier.io/). If its not currently installed and you have either npm or yarn on your machine it will be install it automatically. | Add `format: false` under `google_fonts` in your `pubspec.yaml`        |
+| path          | "assets/fonts/googleFonts" | Where the fonts should be downloaded too. **Fonts not used by this program should not be in this folder**.                                                                                                                                                                       | Add `path:  ""` under `google_fonts` in your `pubspec.yaml`            |
+| flutterPubGet | true                       | If `flutter pub get` should be ran automatically once the fonts have been added                                                                                                                                                                                                  | Add `flutterPubGet: false` under `google_fonts` in your `pubspec.yaml` |
+| docs          | true                       | Adds a `README.md` in the folder for each font with some information about the font.                                                                                                                                                                                             | Add `docs: false` under `google_fonts` in your `pubspec.yaml`          |
 
 ## 🏃🏼‍♂️ Running
 

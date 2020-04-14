@@ -1,3 +1,7 @@
+## 1.0.8
+
+- Fix problem with VScode not recognizing project if `flutter` value in `pubspec.yaml` is wrapped in `""`.
+
 ## 1.0.7
 
 - Add README.md example

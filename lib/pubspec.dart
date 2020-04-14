@@ -73,8 +73,22 @@ class Pubspec {
     }
     yamlMap['flutter']['fonts'] = fonts;
 
-    File('pubspec.yaml').writeAsStringSync(toYamlString(yamlMap));
-
+    final pubspec = File('pubspec.yaml');
+    pubspec.writeAsStringSync(toYamlString(yamlMap));
+    final lines = pubspec.readAsStringSync().split('\n');
+    final fixedLines = <String>[];
+    for (var i = 0; i < lines.length; i++) {
+      if (i != 0 &&
+          lines[i].contains('sdk:') &&
+          lines[i].contains('"flutter"') &&
+          (lines[i - 1].contains('flutter:') ||
+              lines[i - 1].contains('flutter_test:'))) {
+        fixedLines.add(lines[i].replaceAll('"flutter"', 'flutter'));
+      } else {
+        fixedLines.add(lines[i]);
+      }
+    }
+    pubspec.writeAsStringSync(fixedLines.join('\n'));
     Status.success('Wrote config to pubspec.yaml');
   }
 
