@@ -3,6 +3,7 @@ description: Define google fonts in your pubspec.yml and automagically add them 
 version: 1.0.8
 homepage: "https://github.com/Matt-Gleich/local_google_fonts"
 maintainer: Matthew Gleich (Matt-Gleich)
+author: Matthew Gleich (Matt-Gleich)
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
