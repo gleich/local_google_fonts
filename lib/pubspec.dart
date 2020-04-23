@@ -1,12 +1,16 @@
+// 🎯 Dart imports:
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+// 📦 Package imports:
 import 'package:process_run/process_run.dart';
 import 'package:process_run/which.dart';
 import 'package:yaml/yaml.dart';
 import 'package:yamlicious/yamlicious.dart';
+import 'package:yamlicious/yamlicious.dart';
 
+// 🌎 Project imports:
 import 'package:local_google_fonts/status.dart';
 
 class Pubspec {
