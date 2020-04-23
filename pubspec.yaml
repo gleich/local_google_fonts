@@ -1,11 +1,12 @@
 name: local_google_fonts
 description: Define google fonts in your pubspec.yml and automagically add them to your assets and pubspec.yml
 version: 1.0.8
-homepage: "https://github.com/Matt-Gleich/local_google_fonts"
+homepage: 'https://github.com/Matt-Gleich/local_google_fonts'
 maintainer: Matthew Gleich (Matt-Gleich)
+author: Matthew Gleich (Matt-Gleich)
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   yaml: ^2.2.0
@@ -15,4 +16,4 @@ dependencies:
   process_run: ^0.10.8
 
 dev_dependencies:
-  import_sorter: '^1.0.6'
+  import_sorter: '^1.0.7'
