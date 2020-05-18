@@ -16,7 +16,7 @@ dependencies:
   process_run: ^0.10.8
 
 dev_dependencies:
-  import_sorter: '^2.0.3'
+  import_sorter: '^3.0.5'
 
 import_sorter:
   emojis: true
